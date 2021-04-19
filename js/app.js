@@ -14,7 +14,11 @@ const contenedorCitas = document.querySelector('#citas');
 
 class Citas {
     constructor(){
-        this.Citas = []
+        this.citas = []
+    }
+    agregarCita ( cita) {
+        this.citas = [...this.citas, cita];
+        console.log(this.citas)
     }
 }
 
@@ -43,12 +47,12 @@ const administarCitas = new Citas();
 
 evenListeners();
 function evenListeners () {
-    mascotaInput.addEventListener('input', datosCita);
-    propietarioInput.addEventListener('input', datosCita);
-    telefonoInput.addEventListener('input', datosCita);
-    fechaInput.addEventListener('input', datosCita);
-    horataInput.addEventListener('input', datosCita);
-    sintomasInput.addEventListener('input', datosCita);
+    mascotaInput.addEventListener('change', datosCita);
+    propietarioInput.addEventListener('change', datosCita);
+    telefonoInput.addEventListener('change', datosCita);
+    fechaInput.addEventListener('change', datosCita);
+    horataInput.addEventListener('change', datosCita);
+    sintomasInput.addEventListener('change', datosCita);
 
     formulario.addEventListener('submit', nuevaCita);
 
@@ -78,11 +82,29 @@ function nuevaCita (e){
     const { mascota, propietario, telefono, fecha, hora, sintomas} = citaObj;
 
     if (mascota === '' || propietario === '' || telefono === '' || fecha === '' || hora === '' || sintomas === '' ) {
-        
         ui.imprimirAlerta('todos los campos son obligatorios', 'error');
         return;
     }
 
+    //generar un id unico
+    citaObj.id = Date.now();
+
+    //creando nueva cita
+    administarCitas.agregarCita({...citaObj});
+
+    //reiniciar objeto y formulario
+    reiniciarObj();
+    formulario.reset();
+
+    //mostrarHtml
+
 }
 
-
+function reiniciarObj () {
+    citaObj.mascota = '';
+    citaObj.propietario = '';
+    citaObj.telefono = '';
+    citaObj.fecha = '';
+    citaObj.hora = '';
+    citaObj.sintomas = '';
+}
