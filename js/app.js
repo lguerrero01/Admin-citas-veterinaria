@@ -3,7 +3,7 @@ const mascotaInput = document.querySelector('#mascota');
 const propietarioInput = document.querySelector('#propietario');
 const telefonoInput = document.querySelector('#telefono');
 const fechaInput = document.querySelector('#fecha');
-const horataInput = document.querySelector('#hora');
+const horaInput = document.querySelector('#hora');
 const sintomasInput = document.querySelector('#sintomas');
 
 //user inteface
@@ -123,7 +123,7 @@ function evenListeners () {
     propietarioInput.addEventListener('change', datosCita);
     telefonoInput.addEventListener('change', datosCita);
     fechaInput.addEventListener('change', datosCita);
-    horataInput.addEventListener('change', datosCita);
+    horaInput.addEventListener('change', datosCita);
     sintomasInput.addEventListener('change', datosCita);
 
     formulario.addEventListener('submit', nuevaCita);
@@ -198,7 +198,7 @@ function nuevaCita (e){
     formulario.reset();
 }
 
-function reiniciarObj () {
+function reiniciarObjeto () {
     citaObj.mascota = '';
     citaObj.propietario = '';
     citaObj.telefono = '';
