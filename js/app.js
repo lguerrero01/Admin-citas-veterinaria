@@ -10,15 +10,23 @@ const sintomasInput = document.querySelector('#sintomas');
 const formulario = document.querySelector('#nueva-cita');
 const contenedorCitas = document.querySelector('#citas');
 
+let editando = false;
+
 //clases
 
 class Citas {
-    constructor(){
+    constructor() {
         this.citas = []
     }
-    agregarCita ( cita) {
+    agregarCita(cita) {
         this.citas = [...this.citas, cita];
-        console.log(this.citas)
+    }
+    editarCita(citaActualizada) {
+        this.citas = this.citas.map( cita => cita.id === citaActualizada.id ? citaActualizada : cita)
+    }
+
+    eliminarCita(id) {
+        this.citas = this.citas.filter( cita => cita.id !== id);
     }
 }
 
@@ -138,6 +146,14 @@ function datosCita (e) {
     console.log (citaObj)
 }
 
+function eliminarCita(id) {
+    administrarCitas.eliminarCita(id);
+
+    ui.imprimirAlerta('La cita se elimino correctamente');
+    
+    ui.imprimirCitas(administrarCitas);
+
+}
 
 //valida y agrega una nueva cita a la clase de citas 
 function nuevaCita (e){
@@ -149,19 +165,37 @@ function nuevaCita (e){
         ui.imprimirAlerta('todos los campos son obligatorios', 'error');
         return;
     }
+    if(editando) {
+        // Estamos editando
+        administrarCitas.editarCita( {...citaObj} );
 
-    //generar un id unico
-    citaObj.id = Date.now();
+        ui.imprimirAlerta('Guardado Correctamente');
 
-    //creando nueva cita
-    administrarCitas.agregarCita({...citaObj});
+        formulario.querySelector('button[type="submit"]').textContent = 'Crear Cita';
 
-    //reiniciar objeto y formulario
-    reiniciarObj();
-    formulario.reset();
+        editando = false;
 
-    //mostrarHtml
+    } else {
+        // Nuevo Registrando
+
+        // Generar un ID único
+        citaObj.id = Date.now();
+        
+        // Añade la nueva cita
+        administrarCitas.agregarCita({...citaObj});
+
+        // Mostrar mensaje de que todo esta bien...
+        ui.imprimirAlerta('Se agregó correctamente')
+    }
+
+    // Imprimir el HTML de citas
     ui.imprimirCitas(administrarCitas);
+
+    // Reinicia el objeto para evitar futuros problemas de validación
+    reiniciarObjeto();
+
+    // Reiniciar Formulario
+    formulario.reset();
 }
 
 function reiniciarObj () {
@@ -171,4 +205,32 @@ function reiniciarObj () {
     citaObj.fecha = '';
     citaObj.hora = '';
     citaObj.sintomas = '';
+}
+
+
+function cargarEdicion(cita) {
+
+    const {mascota, propietario, telefono, fecha, hora, sintomas, id } = cita;
+
+    // Reiniciar el objeto
+    citaObj.mascota = mascota;
+    citaObj.propietario = propietario;
+    citaObj.telefono = telefono;
+    citaObj.fecha = fecha
+    citaObj.hora = hora;
+    citaObj.sintomas = sintomas;
+    citaObj.id = id;
+
+    // Llenar los Inputs
+    mascotaInput.value = mascota;
+    propietarioInput.value = propietario;
+    telefonoInput.value = telefono;
+    fechaInput.value = fecha;
+    horaInput.value = hora;
+    sintomasInput.value = sintomas;
+
+    formulario.querySelector('button[type="submit"]').textContent = 'Guardar Cambios';
+
+    editando = true;
+
 }
